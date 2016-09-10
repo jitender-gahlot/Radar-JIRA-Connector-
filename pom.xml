@@ -67,36 +67,7 @@
 		-->
     </dependencies>
  <build>
-        <plugins>
-            <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-jira-plugin</artifactId>
-                <version>${amps.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <productVersion>${jira.version}</productVersion>
-                    <productDataVersion>${jira.version}</productDataVersion>
-                    <!-- for license -->
-                    <instructions>
-                        <Import-Package>com.atlassian.activeobjects.external,*;resolution:=optional</Import-Package>
-                        <Private-Package>com.atlassian.upm.license.storage.lib*</Private-Package>
-                        <DynamicImport-Package>com.atlassian.upm.api.license;version="2.18.4", com.atlassian.upm.api.license.entity;version="2.0.1", com.atlassian.upm.api.util;version="2.0.1", com.atlassian.upm.license.storage.plugin;version="${upm.license.compatibility.version}"</DynamicImport-Package>
-                    </instructions>
-                    <bundledArtifacts>
-                        <bundledArtifact>
-                            <groupId>com.atlassian.upm</groupId>
-                            <artifactId>atlassian-universal-plugin-manager-plugin</artifactId>
-                            <version>2.18.4</version>
-                        </bundledArtifact>
-                        <bundledArtifact>
-                            <groupId>com.atlassian.upm</groupId>
-                            <artifactId>plugin-license-storage-plugin</artifactId>
-                            <version>${upm.license.compatibility.version}</version>
-                        </bundledArtifact>
-                    </bundledArtifacts>
-                    <!-- for license -->
-                </configuration>
-            </plugin>
+        <plugins>                
             <!-- for license -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
