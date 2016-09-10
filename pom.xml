@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!--  <groupId>com.atlassian.tutorial</groupId>
+    <artifactId>jira-development</artifactId> -->
+    <groupId>com.atlassian.jira.freshdesk</groupId>
+    <artifactId>integration</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <organization>
+        <name>Example Company</name>
+        <url>http://www.example.com/</url>
+    </organization>
+    <name>jira-freshdesk-integration</name>
+    <description>This is the is plug-in development for FreshDesk-JIRA integration.</description>
+    <packaging>atlassian-plugin</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-api</artifactId>
+            <version>${jira.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Add dependency on jira-core if you want access to JIRA implementation classes as well as the sanctioned API. -->
+        <!-- This is not normally recommended, but may be required eg when migrating a plugin originally developed against JIRA 4.x -->
+        <!--
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-core</artifactId>
+            <version>${jira.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- WIRED TEST RUNNER DEPENDENCIES -->
+        <dependency>
+            <groupId>com.atlassian.plugins</groupId>
+            <artifactId>atlassian-plugins-osgi-testrunner</artifactId>
+            <version>${plugin.testrunner.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>1.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.2.2-atlassian-1</version>
+        </dependency>
+        <!-- Uncomment to use TestKit in your project. Details at https://bitbucket.org/atlassian/jira-testkit -->
+        <!-- You can read more about TestKit at https://developer.atlassian.com/display/JIRADEV/Plugin+Tutorial+-+Smarter+integration+testing+with+TestKit -->
+        <!--
+		<dependency>
+			<groupId>com.atlassian.jira.tests</groupId>
+			<artifactId>jira-testkit-client</artifactId>
+			<version>${testkit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		-->
+    </dependencies>
+ <build>
+        <plugins>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-jira-plugin</artifactId>
+                <version>${amps.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <productVersion>${jira.version}</productVersion>
+                    <productDataVersion>${jira.version}</productDataVersion>
+                    <!-- for license -->
+                    <instructions>
+                        <Import-Package>com.atlassian.activeobjects.external,*;resolution:=optional</Import-Package>
+                        <Private-Package>com.atlassian.upm.license.storage.lib*</Private-Package>
+                        <DynamicImport-Package>com.atlassian.upm.api.license;version="2.18.4", com.atlassian.upm.api.license.entity;version="2.0.1", com.atlassian.upm.api.util;version="2.0.1", com.atlassian.upm.license.storage.plugin;version="${upm.license.compatibility.version}"</DynamicImport-Package>
+                    </instructions>
+                    <bundledArtifacts>
+                        <bundledArtifact>
+                            <groupId>com.atlassian.upm</groupId>
+                            <artifactId>atlassian-universal-plugin-manager-plugin</artifactId>
+                            <version>2.18.4</version>
+                        </bundledArtifact>
+                        <bundledArtifact>
+                            <groupId>com.atlassian.upm</groupId>
+                            <artifactId>plugin-license-storage-plugin</artifactId>
+                            <version>${upm.license.compatibility.version}</version>
+                        </bundledArtifact>
+                    </bundledArtifacts>
+                    <!-- for license -->
+                </configuration>
+            </plugin>
+            <!-- for license -->
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-storage-plugin</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <includeArtifactIds>plugin-license-storage-plugin</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- for license -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <!-- http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html -->
+            <!-- http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <properties>
+        <jira.version>6.4.12</jira.version>
+        <amps.version>5.1.2</amps.version>
+        <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
+        <upm.license.compatibility.version>2.2.2</upm.license.compatibility.version>
+    </properties>
+</project>
